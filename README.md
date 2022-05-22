@@ -18,4 +18,4 @@ The program is **cross platform**.
 You can use the [pyinstaller](https://github.com/pyinstaller/pyinstaller) module to create an **executable** version of the program depending on your OS. 
 
 ### Dist 
-You can download the installer [here]()
+You can download the installer [here](https://github.com/badr-elmazaz/Elis_Firewal_Autoconnect/releases/tag/v1.0.0)
