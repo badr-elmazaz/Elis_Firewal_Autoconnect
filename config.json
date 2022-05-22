@@ -1,0 +1,11 @@
+{
+    "app": {
+        "language": "en",
+        "remember_credentials": false,
+        "speed_test": false,
+        "start_with_os": false,
+        "show_notifications": false,
+        "robot": "341d56384afc0f47b34ca18273e793be555507a49444c30d3d0588688de46cb3",
+        "start_robot": true
+    }
+}
