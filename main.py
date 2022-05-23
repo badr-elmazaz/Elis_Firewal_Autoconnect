@@ -176,8 +176,11 @@ class HackFireWall():
         return False
 
     def _start_routine(self):
-        schedule.every(2).seconds.do(self._ssid_schedule)
-        self._start_schedule()
+        while True:
+            self._ssid_schedule()
+            time.sleep(3)
+        # schedule.every(2).seconds.do(self._ssid_schedule)
+        # self._start_schedule()
 
     def _manage_start_with_os(self, start: bool):
         startup_path = winshell.startup()
@@ -405,12 +408,12 @@ class HackFireWall():
         return top
 
 
-    def _start_schedule(self):
-        while True:
-            # Checks whether a scheduled task
-            # is pending to run or not
-            schedule.run_pending()
-            time.sleep(1)
+    # def _start_schedule(self):
+    #     while True:
+    #         # Checks whether a scheduled task
+    #         # is pending to run or not
+    #         schedule.run_pending()
+    #         time.sleep(1)
 
     def _manage_succeed_login(self, top_loading_window):
         self._send_notification(self.SUCCEED)
