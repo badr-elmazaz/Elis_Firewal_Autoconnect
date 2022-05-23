@@ -44,6 +44,7 @@ class Consts():
     SSID = "ELIS.org Studenti"
 
 
+
 @dataclass
 class HackFireWall():
     username: Optional[str] = None
