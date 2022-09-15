@@ -109,13 +109,11 @@ class HackFireWall():
 
     def _encrypt_dict(self, d: dict):
         binary_dict = ujson.dumps(d, indent=2).encode('utf-8')
-        encrypted = self.fernet.encrypt(binary_dict)
-        return encrypted
+        return self.fernet.encrypt(binary_dict)
 
     def _decrypt_dict(self, d: bytes):
         decrypted = self.fernet.decrypt(d)
-        dict = ujson.loads(decrypted.decode("utf-8"))
-        return dict
+        return ujson.loads(decrypted.decode("utf-8"))
 
     def _update_config(self):
         config_to_save = {k: self.CONFIG[k] for k in self.CONFIG if k != "user"}
@@ -172,9 +170,7 @@ class HackFireWall():
     def _verify_if_start_gui(self):
         if not self.CONFIG["user"]["username"] or not self.CONFIG["user"]["password"]:
             return True
-        if not self.CONFIG["app"]["remember_credentials"]:
-            return True
-        return False
+        return not self.CONFIG["app"]["remember_credentials"]
 
     def _start_routine(self):
         while True:
@@ -185,19 +181,18 @@ class HackFireWall():
 
     def _manage_start_with_os(self, start: bool):
         startup_path = winshell.startup()
-        full_path = os.path.join(startup_path, APP_NAME + ".lnk")
+        full_path = os.path.join(startup_path, f"{APP_NAME}.lnk")
         if start:
             # if not
             if not os.path.exists(full_path):
                 logging.info(("Im setting startup shortcut"))
                 self._create_shortcut(program_path=__file__, shortcut_icon_path=ICON, shortcut_path=full_path)
-        else:
-            if os.path.exists(full_path):
-                try:
-                    logging.info(("Im removing startup shortcut"))
-                    os.remove(full_path)
-                except Exception as e:
-                    logging.exception("Error removing shortcut")
+        elif os.path.exists(full_path):
+            try:
+                logging.info(("Im removing startup shortcut"))
+                os.remove(full_path)
+            except Exception as e:
+                logging.exception("Error removing shortcut")
 
     def _manage_gui_settings_button(self, top):
         self.CONFIG["app"]["remember_credentials"] = self.remember_credentials_check_box.get() == 1
@@ -254,9 +249,8 @@ class HackFireWall():
             checkbox_robot.select()
         if self.CONFIG["app"]["remember_credentials"]:
             checkbox_remember_credentials.select()
-        if "windows" in self.OS:
-            if self.CONFIG["app"]["start_with_os"]:
-                checkbox_start_with_os.select()
+        if "windows" in self.OS and self.CONFIG["app"]["start_with_os"]:
+            checkbox_start_with_os.select()
         if self.CONFIG["app"]["show_notifications"]:
             checkbox_show_notifications.select()
         button = Button(top, width=14, height=1, text="Save",
@@ -675,7 +669,7 @@ class HackFireWall():
 
     def _create_shortcut(self, shortcut_path, shortcut_icon_path, program_path):
         if not shortcut_path.lower().endswith(".lnk"):
-            shortcut_path = shortcut_path + ".lnk"
+            shortcut_path = f"{shortcut_path}.lnk"
         shell = win32com.client.Dispatch("WScript.Shell")
         shortcut = shell.CreateShortCut(shortcut_path)
         shortcut.Targetpath = program_path
